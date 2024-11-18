@@ -2,7 +2,6 @@ import cv2
 import pyautogui
 import numpy as np
 import time
-import keyboard
 
 template_path = r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\shake.png"
 template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
@@ -24,8 +23,6 @@ def click_shake(center_x, center_y):
     pyautogui.mouseDown()
     time.sleep(0.01)
     pyautogui.mouseUp()
-    
-    #print(f"Clicked at: ({center_x}, {center_y})")
 
 def auto_shake():
     global center_x
@@ -49,15 +46,7 @@ def auto_shake():
         center_x_prev = center_x
         center_y_prev = center_y
 
-toggle = True
-
 while True:
-    if keyboard.is_pressed('f5'):
-        toggle = not toggle
-        print(f"Auto shake: {toggle}")
-        time.sleep(0.5) 
-    
-    if toggle:
-        auto_shake()
-        time.sleep(0.05)
+    auto_shake()
+    time.sleep(0.05)
     
