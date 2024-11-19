@@ -2,7 +2,10 @@ import cv2
 import pyautogui
 import numpy as np
 import time
+import dxcam
 from datetime import datetime
+
+camera = dxcam.create()
 
 template_path = r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\shake.png"
 template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
@@ -38,33 +41,37 @@ def auto_shake():
     global center_x_prev
     global center_y_prev
     
-    screenshot = cv2.cvtColor(np.array(pyautogui.screenshot()), cv2.COLOR_BGR2GRAY)
-    result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
-    matches = np.where(result >= template_threshold)
+    grab = camera.grab()
+    
+    if grab is not None:  
+        screenshot = cv2.cvtColor(grab, cv2.COLOR_BGR2GRAY)
+        result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
+        matches = np.where(result >= template_threshold)
 
-    if len(matches[0]) > 0:
-        x = matches[1][0]
-        y = matches[0][0]
-        center_x = x + (template_width // 2)
-        center_y = y + (template_height // 2)
-        
-        if center_x != center_x_prev or center_y != center_y_prev:
-            click_shake(center_x, center_y)
+        if len(matches[0]) > 0:
+            x = matches[1][0]
+            y = matches[0][0]
+            center_x = x + (template_width // 2)
+            center_y = y + (template_height // 2)
             
-        center_x_prev = center_x
-        center_y_prev = center_y
+            if center_x != center_x_prev or center_y != center_y_prev:
+                time.sleep(0.02)
+                click_shake(center_x, center_y)
+                
+                center_x_prev = center_x
+                center_y_prev = center_y
 
 run_count = 0
 print("Program start.")
 
 while True:
     auto_shake()
-    time.sleep(0.05)
+    time.sleep(0.02)
     current_time = datetime.now()
     
     run_count += 1
     if run_count % 100 == 0:
         et = current_time - start_time
-        print(f"Time elapsed: {et.seconds // 3600}h {et.seconds // 60}m {et.seconds}s")
+        print(f"Time elapsed: {et.seconds // 3600}h {et.seconds // 60}m {et.seconds % 60}s")
         run_count = 0
     
