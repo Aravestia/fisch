@@ -17,7 +17,6 @@ center_y = 0
 center_x_prev = 0
 center_y_prev = 0
 
-shake_count = 0
 start_time = datetime.now()
 current_time = start_time
 
@@ -26,14 +25,12 @@ def click_shake(center_x, center_y):
     pyautogui.moveTo(center_x, center_y)
             
     pyautogui.mouseDown(button='right')
-    time.sleep(0.01)
+    time.sleep(0.02)
     pyautogui.mouseUp(button='right')
     
     pyautogui.mouseDown()
-    time.sleep(0.01)
+    time.sleep(0.02)
     pyautogui.mouseUp()
-    
-    shake_count += 1
 
 def auto_shake():
     global center_x
