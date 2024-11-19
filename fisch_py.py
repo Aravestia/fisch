@@ -10,7 +10,7 @@ camera = dxcam.create()
 template_path = r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\shake.png"
 template = cv2.imread(template_path, cv2.IMREAD_GRAYSCALE)
 template_width, template_height = template.shape[::-1]
-template_threshold = 0.4
+template_threshold = 0.5
 
 center_x = 0
 center_y = 0
@@ -21,13 +21,12 @@ start_time = datetime.now()
 current_time = start_time
 
 def click_shake(center_x, center_y):
-    global shake_count
     pyautogui.moveTo(center_x, center_y)
-            
+    time.sleep(0.02)        
     pyautogui.mouseDown(button='right')
     time.sleep(0.02)
     pyautogui.mouseUp(button='right')
-    
+    time.sleep(0.02)
     pyautogui.mouseDown()
     time.sleep(0.02)
     pyautogui.mouseUp()
@@ -56,19 +55,20 @@ def auto_shake():
                 click_shake(center_x, center_y)
                 
                 center_x_prev = center_x
-                center_y_prev = center_y
+                center_y_prev = center_y      
+                
+    time.sleep(0.02)
 
 run_count = 0
 print("Program start.")
 
-while True:
-    auto_shake()
-    time.sleep(0.02)
-    current_time = datetime.now()
+try:
+    while True:
+        auto_shake()
+        current_time = datetime.now()
     
-    run_count += 1
-    if run_count % 100 == 0:
-        et = current_time - start_time
-        print(f"Time elapsed: {et.seconds // 3600}h {et.seconds // 60}m {et.seconds % 60}s")
-        run_count = 0
+except KeyboardInterrupt:
+    et = current_time - start_time
+    print(f"Time elapsed: {et.seconds // 3600}h {et.seconds // 60}m {et.seconds % 60}s")
+
     
