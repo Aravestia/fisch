@@ -62,7 +62,7 @@ def auto_shake():
                 center_x_prev = 0
                 center_y_prev = 0
             
-    time.sleep(0.2)   
+    time.sleep(0.1)   
 
 run_count = 0
 print("Program start.")
