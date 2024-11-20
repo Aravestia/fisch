@@ -73,7 +73,7 @@ try:
    
 except KeyboardInterrupt:
     current_time = datetime.now()
-    et = current_time - start_time
-    print(f"Time elapsed: {et.seconds // 3600}h {et.seconds // 60}m {et.seconds % 60}s")
+    et = (current_time - start_time).seconds
+    print(f"Time elapsed: {et// 3600}h {et // 60}m {et % 60}s")
 
     

@@ -1,6 +1,6 @@
 toggled := false
 
-q::
+f::
   toggled := !toggled
 
   Send, {\}
