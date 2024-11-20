@@ -57,10 +57,7 @@ def auto_shake():
                 center_y_prev = center_y
             else:
                 print("wait")
-                
-                time.sleep(0.1)
-                center_x_prev = 0
-                center_y_prev = 0
+                time.sleep(0.01)
             
     time.sleep(0.1)   
 
