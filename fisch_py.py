@@ -66,9 +66,9 @@ print("Program start.")
 try:
     while True:
         auto_shake()
-        current_time = datetime.now()
    
 except KeyboardInterrupt:
+    current_time = datetime.now()
     et = current_time - start_time
     print(f"Time elapsed: {et.seconds // 3600}h {et.seconds // 60}m {et.seconds % 60}s")
 
