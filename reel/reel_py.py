@@ -27,6 +27,7 @@ grab_bottom = 887
 grab_length = grab_right - grab_left
 
 pivot_pos = 0
+pivot_pos_prev = 0
 
 bar_length_00 = 233
 bar_length_05 = 271
@@ -35,10 +36,13 @@ bar_length_15 = 349
 start_time = datetime.now()
 current_time = start_time
 
+action = False
 at = datetime.now()
 
 def auto_reel(bar_length):
     global pivot_pos
+    global pivot_pos_prev
+    global action
     global at
     
     grab = camera.grab(region=(grab_left, grab_top, grab_right, grab_bottom))
@@ -61,30 +65,45 @@ def auto_reel(bar_length):
             
             if pivot_pos < bar_length:
                 pyautogui.mouseUp()
+                print("<<")
             elif pivot_pos > grab_length - bar_length:
                 pyautogui.mouseDown()
+                print(">>")
             else:
-                pyautogui.mouseDown()
-                time.sleep(0.01)
-                pyautogui.mouseUp()
+                if pivot_pos_prev > pivot_pos:
+                    pyautogui.click()
+                    time.sleep(0.02)
+                    print("<=")
+                elif pivot_pos_prev < pivot_pos:
+                    pyautogui.mouseDown()
+                    print("=>")
+                else:
+                    pyautogui.mouseDown()
+                    pyautogui.mouseUp()
+                    print("==")
                 
+            pivot_pos_prev = pivot_pos
+            action = True
             at = datetime.now()
+            
+    ct = datetime.now()
     
-    ct = datetime.now()            
-    if (ct - at).seconds >= 15:
-        print("cast")
+    if action:
+        if (ct - at).seconds >= 3:
+            print("cast")
         
-        pyautogui.mouseDown(button='right')
-        time.sleep(0.05)
-        pyautogui.mouseUp(button='right')
-        time.sleep(0.05)
+            pyautogui.mouseDown(button='right')
+            time.sleep(0.05)
+            pyautogui.mouseUp(button='right')
+            time.sleep(0.05)
+            
+            pyautogui.mouseDown()
+            time.sleep(0.3)
+            pyautogui.mouseUp()
+            
+            action = False
+            at = datetime.now()
         
-        pyautogui.mouseDown()
-        time.sleep(0.2)
-        pyautogui.mouseUp()
-        
-        at = datetime.now()
-
 print("Program start.")
 
 try:
@@ -93,6 +112,6 @@ try:
 except KeyboardInterrupt:
     current_time = datetime.now()
     et = (current_time - start_time).seconds
-    print(f"Time elapsed: {et// 3600}h {et // 60}m {et % 60}s")
+    print(f"Time elapsed: {et // 3600}h {(et // 60) % 60}m {et % 60}s")
 
     
