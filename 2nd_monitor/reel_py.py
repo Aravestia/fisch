@@ -6,7 +6,7 @@ import dxcam
 import time
 from datetime import datetime
 
-camera = dxcam.create()
+camera = dxcam.create(device_idx=1, output_idx=0)
 
 reel_pivot = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\reel\reel_pivot.png", cv2.IMREAD_GRAYSCALE)
 reel_pivot_width, reel_pivot_height = reel_pivot.shape[::-1]

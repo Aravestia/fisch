@@ -8,9 +8,9 @@ from datetime import datetime
 
 camera = dxcam.create()
 
-template = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\shake.png", cv2.IMREAD_GRAYSCALE)
+template = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\shake\shake.png", cv2.IMREAD_GRAYSCALE)
 template_width, template_height = template.shape[::-1]
-template_threshold = 0.7
+template_threshold = 0.8
 
 res_x = 1920
 res_y = 1080
@@ -52,7 +52,7 @@ def auto_shake():
             center_x = matches[1][0] + (template_width // 2) + grab_left
             center_y = matches[0][0] + (template_height // 2) + grab_top
             
-            if center_x != center_x_prev or center_y != center_y_prev:
+            if abs(center_x - center_x_prev) > 1 or abs(center_y - center_y_prev) > 1:
                 print(f"x: {center_x}, y: {center_y}")
                 click_shake(center_x, center_y)
                 
