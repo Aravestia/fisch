@@ -31,7 +31,7 @@ def click_shake(center_x, center_y):
             
     pyautogui.mouseDown(button='right')
     pyautogui.mouseUp(button='right')
-    time.sleep(0.01)
+    time.sleep(0.25)
     
     pyautogui.click()
 

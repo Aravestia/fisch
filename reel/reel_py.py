@@ -32,7 +32,7 @@ bar_length_00 = 233
 bar_length_05 = 271
 bar_length_15 = 349
 bar_length_20 = 387
-bar_length = bar_length_20
+bar_length = bar_length_15
 
 start_time = datetime.now()
 current_time = start_time
@@ -46,6 +46,7 @@ def follow_pivot(pivot_pos, pivot_pos_prev):
         print("<<")
     elif pivot_pos > grab_length - bar_length:
         pyautogui.mouseDown()
+        time.sleep(0.25)
         print(">>")
     else:
         if pivot_pos_prev > pivot_pos:
