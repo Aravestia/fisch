@@ -6,7 +6,11 @@ import dxcam
 import time
 from datetime import datetime
 
-camera = dxcam.create()
+variables = []
+with open("variables.txt", "r") as file:
+    variables = [line.strip() for line in file]
+    
+camera = dxcam.create(device_idx=int(variables[1]), output_idx=0)
 
 reel_pivot = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\reel\reel_pivot.png", cv2.IMREAD_GRAYSCALE)
 reel_pivot_width, reel_pivot_height = reel_pivot.shape[::-1]
@@ -28,11 +32,13 @@ grab_length = grab_right - grab_left
 pivot_pos = 0
 pivot_pos_prev = 0
 
-bar_length_00 = 233
-bar_length_05 = 271
-bar_length_15 = 349
-bar_length_20 = 387
-bar_length = bar_length_15
+bar_lengths = {
+    "0" : 233,
+    "0.5" : 271,
+    "0.15" : 349,
+    "0.2" : 387,
+}
+bar_length = bar_lengths[variables[3]]
 
 start_time = datetime.now()
 current_time = start_time
@@ -106,7 +112,7 @@ def auto_reel():
             at = datetime.now()
             
     ct = datetime.now()
-    seconds_before_cast = 1 if action else 10
+    seconds_before_cast = 1 if action else int(variables[5])
     
     if (ct - at).seconds >= seconds_before_cast:
         cast_rod()

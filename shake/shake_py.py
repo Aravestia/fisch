@@ -6,7 +6,11 @@ import dxcam
 import time
 from datetime import datetime
 
-camera = dxcam.create()
+variables = []
+with open("variables.txt", "r") as file:
+    variables = [line.strip() for line in file]
+    
+camera = dxcam.create(device_idx=int(variables[1]), output_idx=0)
 
 template = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\shake\shake.png", cv2.IMREAD_GRAYSCALE)
 template_width, template_height = template.shape[::-1]
@@ -31,7 +35,7 @@ def click_shake(center_x, center_y):
             
     pyautogui.mouseDown(button='right')
     pyautogui.mouseUp(button='right')
-    time.sleep(0.25)
+    time.sleep(0.1)
     
     pyautogui.click()
 
