@@ -34,7 +34,8 @@ pivot_pos_prev = 0
 
 bar_lengths = {
     "0" : 233,
-    "0.5" : 271,
+    "0.05" : 271,
+    "0.1" : 309,
     "0.15" : 349,
     "0.2" : 387,
 }
@@ -112,7 +113,7 @@ def auto_reel():
             at = datetime.now()
             
     ct = datetime.now()
-    seconds_before_cast = 1 if action else int(variables[5])
+    seconds_before_cast = float(variables[5]) if action else float(variables[7])
     
     if (ct - at).seconds >= seconds_before_cast:
         cast_rod()
