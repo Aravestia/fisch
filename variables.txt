@@ -5,4 +5,4 @@ bar length:
 cast time (seconds):
 1
 recast time (seconds):
-6
+5

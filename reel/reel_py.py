@@ -6,126 +6,122 @@ import dxcam
 import time
 from datetime import datetime
 
-variables = []
-with open("variables.txt", "r") as file:
-    variables = [line.strip() for line in file]
-    
-camera = dxcam.create(device_idx=int(variables[1]), output_idx=0)
+class Reel():
+    def __init__(self):
 
-reel_pivot = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\reel\reel_pivot.png", cv2.IMREAD_GRAYSCALE)
-reel_pivot_width, reel_pivot_height = reel_pivot.shape[::-1]
-reel_pivot_threshold = 0.9
+        self.variables = []
+        with open("variables.txt", "r") as file:
+            self.variables = [line.strip() for line in file]
+            
+        self.camera = dxcam.create(device_idx=int(self.variables[1]), output_idx=0)
 
-reel_pivot_off = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\reel\reel_pivot_off.png", cv2.IMREAD_GRAYSCALE)
-reel_pivot_off_width, reel_pivot_off_height = reel_pivot_off.shape[::-1]
+        self.reel_pivot = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\reel\reel_pivot.png", cv2.IMREAD_GRAYSCALE)
+        self.reel_pivot_width, self.reel_pivot_height = self.reel_pivot.shape[::-1]
+        self.reel_pivot_threshold = 0.9
 
-res_x = 1920
-res_y = 1080
+        self.reel_pivot_off = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\reel\reel_pivot_off.png", cv2.IMREAD_GRAYSCALE)
+        self.reel_pivot_off_width, self.reel_pivot_off_height = self.reel_pivot_off.shape[::-1]
 
-grab_left = 572
-grab_right = 1348
-grab_top = 856
-grab_bottom = 887
+        self.res_x = 1920
+        self.res_y = 1080
 
-grab_length = grab_right - grab_left
+        self.grab_left = 572
+        self.grab_right = 1348
+        self.grab_top = 856
+        self.grab_bottom = 887
 
-pivot_pos = 0
-pivot_pos_prev = 0
+        self.grab_length = self.grab_right - self.grab_left
 
-bar_lengths = {
-    "0" : 233,
-    "0.05" : 271,
-    "0.1" : 309,
-    "0.15" : 349,
-    "0.2" : 387,
-}
-bar_length = bar_lengths[variables[3]]
+        self.pivot_pos = 0
+        self.pivot_pos_prev = 0
 
-start_time = datetime.now()
-current_time = start_time
+        self.bar_lengths = {
+            "0" : 233,
+            "0.05" : 271,
+            "0.1" : 309,
+            "0.15" : 349,
+            "0.2" : 387,
+        }
+        self.bar_length = self.bar_lengths[self.variables[3]]
 
-action = False
-at = datetime.now()
+        self.start_time = datetime.now()
+        self.current_time = self.start_time
 
-def follow_pivot(pivot_pos, pivot_pos_prev):
-    if pivot_pos < bar_length:
-        pyautogui.mouseUp()
-        print("<<")
-    elif pivot_pos > grab_length - bar_length:
-        pyautogui.mouseDown()
-        time.sleep(0.25)
-        print(">>")
-    else:
-        if pivot_pos_prev > pivot_pos:
-            pyautogui.click()
-            time.sleep(0.02)
-            print("<=")
-        elif pivot_pos_prev < pivot_pos:
-            pyautogui.mouseDown()
-            print("=>")
-        else:
-            pyautogui.mouseDown()
+        self.action = False
+        self.at = datetime.now()
+
+    def follow_pivot(self, pivot_pos, pivot_pos_prev):
+        if pivot_pos < self.bar_length:
             pyautogui.mouseUp()
-            print("==")
+            print("<<")
+        elif pivot_pos > self.grab_length - self.bar_length:
+            pyautogui.mouseDown()
+            time.sleep(0.25)
+            print(">>")
+        else:
+            if pivot_pos_prev > pivot_pos:
+                pyautogui.click()
+                time.sleep(0.02)
+                print("<=")
+            elif pivot_pos_prev < pivot_pos:
+                pyautogui.mouseDown()
+                print("=>")
+            else:
+                pyautogui.mouseDown()
+                pyautogui.mouseUp()
+                print("==")
 
-def cast_rod():
-    global action
-    global at
-    
-    print("cast")
+    def cast_rod(self):
+        print("cast")
 
-    pyautogui.mouseDown(button='right')
-    time.sleep(0.05)
-    pyautogui.mouseUp(button='right')
-    time.sleep(0.05)
-    
-    pyautogui.mouseDown()
-    time.sleep(0.2)
-    pyautogui.mouseUp()
-    
-    action = False
-    at = datetime.now()
+        pyautogui.mouseDown(button='right')
+        time.sleep(0.05)
+        pyautogui.mouseUp(button='right')
+        time.sleep(0.05)
+        
+        pyautogui.mouseDown()
+        time.sleep(0.2)
+        pyautogui.mouseUp()
+        
+        self.action = False
+        self.at = datetime.now()
 
-def auto_reel():
-    global pivot_pos
-    global pivot_pos_prev
-    global action
-    global at
-    
-    grab = camera.grab(region=(grab_left, grab_top, grab_right, grab_bottom))
-    
-    if grab is not None:
-        screenshot = cv2.cvtColor(grab, cv2.COLOR_BGR2GRAY)
+    def auto_reel(self):  
+        grab = self.camera.grab(region=(self.grab_left, self.grab_top, self.grab_right, self.grab_bottom))
         
-        result_pivot = cv2.matchTemplate(screenshot, reel_pivot, cv2.TM_CCOEFF_NORMED)
-        if np.max(result_pivot) < reel_pivot_threshold:
-            result_pivot = cv2.matchTemplate(screenshot, reel_pivot_off, cv2.TM_CCOEFF_NORMED)
-        
-        matches_pivot = np.where(result_pivot >= reel_pivot_threshold)
-        
-        if len(matches_pivot[0]) > 0:    
-            pivot_pos = matches_pivot[1][0] + (reel_pivot_width // 2)
+        if grab is not None:
+            screenshot = cv2.cvtColor(grab, cv2.COLOR_BGR2GRAY)
             
-            follow_pivot(pivot_pos, pivot_pos_prev)
+            result_pivot = cv2.matchTemplate(screenshot, self.reel_pivot, cv2.TM_CCOEFF_NORMED)
+            if np.max(result_pivot) < self.reel_pivot_threshold:
+                result_pivot = cv2.matchTemplate(screenshot, self.reel_pivot_off, cv2.TM_CCOEFF_NORMED)
+            
+            matches_pivot = np.where(result_pivot >= self.reel_pivot_threshold)
+            
+            if len(matches_pivot[0]) > 0:    
+                self.pivot_pos = matches_pivot[1][0] + (self.reel_pivot_width // 2)
                 
-            pivot_pos_prev = pivot_pos
-            action = True
-            at = datetime.now()
-            
-    ct = datetime.now()
-    seconds_before_cast = float(variables[5]) if action else float(variables[7])
-    
-    if (ct - at).seconds >= seconds_before_cast:
-        cast_rod()
+                self.follow_pivot(self.pivot_pos, self.pivot_pos_prev)
+                    
+                self.pivot_pos_prev = self.pivot_pos
+                self.action = True
+                self.at = datetime.now()
+                
+        ct = datetime.now()
+        seconds_before_cast = float(self.variables[5]) if self.action else float(self.variables[7])
         
-print("Program start.")
+        if (ct - self.at).seconds >= seconds_before_cast:
+            self.cast_rod()
 
-try:
-    while True:
-        auto_reel()
-except KeyboardInterrupt:
-    current_time = datetime.now()
-    et = (current_time - start_time).seconds
-    print(f"Time elapsed: {et // 3600}h {(et // 60) % 60}m {et % 60}s")
+if __name__ == '__main__':
+    reel = Reel()
+    
+    try:
+        while True:
+            reel.auto_reel()
+    except KeyboardInterrupt:
+        current_time = datetime.now()
+        et = (current_time - reel.start_time).seconds
+        print(f"Time elapsed: {et // 3600}h {(et // 60) % 60}m {et % 60}s")
 
     
