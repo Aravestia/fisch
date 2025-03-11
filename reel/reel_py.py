@@ -11,7 +11,7 @@ class Reel():
     def __init__(self):
 
         self.variables = []
-        with open("variables.txt", "r") as file:
+        with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "variables.txt"), "r") as file:
             self.variables = [line.strip() for line in file]
             
         self.camera = dxcam.create(device_idx=int(self.variables[1]), output_idx=0)
@@ -116,6 +116,7 @@ class Reel():
 
 if __name__ == '__main__':
     reel = Reel()
+    print("start.")
     
     try:
         while True:

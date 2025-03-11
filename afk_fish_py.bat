@@ -1,7 +1,8 @@
 @echo off
 
-start /min cmd /k "python C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\shake\shake_py.py"
+cd /d %~dp0
 
-start /min cmd /k "python C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\reel\reel_py.py"
+start /min cmd /k "python reel\reel_py.py"
+start /min cmd /k "python shake\shake_py.py"
 
 exit
