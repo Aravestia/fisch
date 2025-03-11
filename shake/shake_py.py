@@ -5,6 +5,7 @@ import dxcam
 
 import time
 from datetime import datetime
+import os
 
 class Shake():
     def __init__(self):
@@ -15,7 +16,7 @@ class Shake():
         
         self.camera = dxcam.create(device_idx=int(self.variables[1]), output_idx=0)
 
-        self.template = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\shake\shake.png", cv2.IMREAD_GRAYSCALE)
+        self.template = cv2.imread(os.path.join(os.path.dirname(os.path.abspath(__file__)), "shake.png"), cv2.IMREAD_GRAYSCALE)
         self.template_width, self.template_height = self.template.shape[::-1]
         self.template_threshold = 0.8
 

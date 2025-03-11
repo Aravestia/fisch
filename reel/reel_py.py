@@ -5,6 +5,7 @@ import dxcam
 
 import time
 from datetime import datetime
+import os
 
 class Reel():
     def __init__(self):
@@ -15,11 +16,11 @@ class Reel():
             
         self.camera = dxcam.create(device_idx=int(self.variables[1]), output_idx=0)
 
-        self.reel_pivot = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\reel\reel_pivot.png", cv2.IMREAD_GRAYSCALE)
+        self.reel_pivot = cv2.imread(os.path.join(os.path.dirname(os.path.abspath(__file__)), "reel_pivot.png"), cv2.IMREAD_GRAYSCALE)
         self.reel_pivot_width, self.reel_pivot_height = self.reel_pivot.shape[::-1]
         self.reel_pivot_threshold = 0.9
 
-        self.reel_pivot_off = cv2.imread(r"C:\Users\65878\Downloads\Programming\Usable\AHK\fisch\reel\reel_pivot_off.png", cv2.IMREAD_GRAYSCALE)
+        self.reel_pivot_off = cv2.imread(os.path.join(os.path.dirname(os.path.abspath(__file__)), "reel_pivot_off.png"), cv2.IMREAD_GRAYSCALE)
         self.reel_pivot_off_width, self.reel_pivot_off_height = self.reel_pivot_off.shape[::-1]
 
         self.res_x = 1920
