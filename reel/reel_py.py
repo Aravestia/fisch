@@ -6,6 +6,7 @@ import dxcam
 import time
 from datetime import datetime
 import os
+import random
 
 class Reel():
     def __init__(self):
@@ -50,6 +51,9 @@ class Reel():
 
         self.action = False
         self.at = datetime.now()
+        
+        self.cast_1 = float(self.variables[5])
+        self.cast_2 = float(self.variables[7])
 
     def follow_pivot(self, pivot_pos, pivot_pos_prev):
         if pivot_pos < self.bar_length:
@@ -57,7 +61,7 @@ class Reel():
             print("<<")
         elif pivot_pos > self.grab_length - self.bar_length:
             pyautogui.mouseDown()
-            time.sleep(0.25)
+            time.sleep(random.uniform(0.25, 0.27))
             print(">>")
         else:
             if pivot_pos_prev > pivot_pos:
@@ -76,12 +80,12 @@ class Reel():
         print("cast")
 
         pyautogui.mouseDown(button='right')
-        time.sleep(0.05)
+        time.sleep(random.uniform(0.05, 0.07))
         pyautogui.mouseUp(button='right')
-        time.sleep(0.05)
+        time.sleep(random.uniform(0.05, 0.07))
         
         pyautogui.mouseDown()
-        time.sleep(0.2)
+        time.sleep(random.uniform(0.2, 0.22))
         pyautogui.mouseUp()
         
         self.action = False
@@ -109,7 +113,7 @@ class Reel():
                 self.at = datetime.now()
                 
         ct = datetime.now()
-        seconds_before_cast = float(self.variables[5]) if self.action else float(self.variables[7])
+        seconds_before_cast = random.uniform(self.cast_1, self.cast_1 + 0.1) if self.action else random.uniform(self.cast_2, self.cast_2 + 0.1)
         
         if (ct - self.at).seconds >= seconds_before_cast:
             self.cast_rod()

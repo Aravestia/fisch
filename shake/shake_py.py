@@ -6,6 +6,7 @@ import dxcam
 import time
 from datetime import datetime
 import os
+import random
 
 class Shake():
     def __init__(self):
@@ -38,7 +39,7 @@ class Shake():
                 
         pyautogui.mouseDown(button='right')
         pyautogui.mouseUp(button='right')
-        time.sleep(0.1)
+        time.sleep(random.uniform(0.1, 0.12))
         
         pyautogui.click()
 
